@@ -6,8 +6,8 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import "./App.css";
 import dragIcon from './assets/dragicon.png';
+
 
 interface Todo {
   _id: string;
@@ -83,24 +83,27 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <h1 className="title">MERN Todo Dashboard</h1>
-      <div>
+    <div className="flex flex-col justify-center items-center p-8">
+      <h1 className="text-3xl font-bold mb-4">MERN Todo Dashboard</h1>
+      <div className="flex flex-col items-center">
         <input
           type="text"
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="input_title"
+          className="p-2 m-2 border-2 border-gray-300 rounded-md"
         />
         <input
           type="text"
           placeholder="Link"
           value={link}
-          className="input_link"
+          className="p-2 m-2 border-2 border-gray-300 rounded-md"
           onChange={(e) => setLink(e.target.value)}
         />
-        <button onClick={addTodo} className="addbutton">
+        <button
+          onClick={addTodo}
+          className="bg-violet-500 text-white font-bold rounded-md p-2"
+        >
           Add Todo
         </button>
       </div>
@@ -108,7 +111,7 @@ const App: React.FC = () => {
         <Droppable droppableId={`todos-${todos.length}`} type="todo">
           {(provided) => (
             <ul
-              className="notes_container"
+              className="flex flex-col items-center justify-center list-none text-2xl min-h-[75vh] p-8 w-screen"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
@@ -116,33 +119,44 @@ const App: React.FC = () => {
                 <Draggable key={todo._id} draggableId={todo._id} index={index}>
                   {(provided, snapshot) => (
                     <li
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    className={`note_list ${
-                      snapshot.isDragging ? "dragging" : ""
-                    } ${todo.completed ? "completed" : ""}`}
-                  >
-                    <div
-                      className="drag-handle"
-                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      className={`flex flex-col bg-purple-200 ${
+                        snapshot.isDragging ? "dragging" : ""
+                      } ${todo.completed ? "completed" : ""} p-4 m-4 min-w-[20rem] h-auto bg-antiquewhite border-2 border-palevioletred rounded-lg`}
                     >
-                      <img src={dragIcon} alt="dragIcon" width={20} />
+                      <div
+                        className="drag-handle cursor-grab user-select-none"
+                        {...provided.dragHandleProps}
+                      >
+                        <img src={dragIcon} alt="dragIcon" width={20} />
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={todo.completed}
+                        className="h-[1rem]"
+                        onChange={() => updateTodo(todo._id, !todo.completed)}
+                      />
+                      <div
+                      className={`text-xl m-4 font-bold ${
+                        todo.completed ? "line-through text-red-500" : ""
+                      }`}
+                    >
+                      {todo.title}
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={todo.completed}
-                      className="list_input"
-                      onChange={() => updateTodo(todo._id, !todo.completed)}
-                    />
-                    <div className="list_title">{todo.title}</div>
-                    <a href={todo.link} className="list_title">Sample Wireframe</a>
-                    <button
-                      className="list_delete"
-                      onClick={() => deleteTodo(todo._id)}
-                    >
-                      Delete
-                    </button>
-                  </li>
+                      <a
+                        href={todo.link}
+                        className="block text-blue-800 font-bold text-xl m-4"
+                      >
+                        Link: {todo.link}
+                      </a>
+                      <button
+                        className="bg-red-500 text-[1rem] min-w-[8rem] m-auto text-white font-bold rounded-md px-2 p-1"
+                        onClick={() => deleteTodo(todo._id)}
+                      >
+                        Delete
+                      </button>
+                    </li>
                   )}
                 </Draggable>
               ))}
